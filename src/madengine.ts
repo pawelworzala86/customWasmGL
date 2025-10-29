@@ -1,30 +1,12 @@
-/*import {
-  WebGLRenderingContext,
-} from './WebGL';*/
-
-import { 
-  loadModel, 
-  logString,
-} from './Engine';
-
 import { 
   WebGLRenderingContext,
+  log,
 } from './GL';
 
 
-function logStr(str: string):void{
-  const kaiPtr = changetype<usize>(String.UTF8.encode(str));
-  logString(kaiPtr,str.length)
-}
 
 
-
-
-
-
-
-
-logStr('started...')
+log('started...')
 
 const gl = new WebGLRenderingContext('cnvs')
 

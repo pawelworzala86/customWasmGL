@@ -1,5 +1,7 @@
 export type WebGLRenderingContextId = i32;
 
+export declare function log(text: string):void;
+
 export declare function createContextFromCanvas(canvas_id: string): WebGLRenderingContextId;
 
 export class WebGLRenderingContext{
