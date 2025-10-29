@@ -126,7 +126,12 @@ wasmMemory3.set(jsArray);
 }
 */
 
-
+async function loadEngine(){
+    const promise = await fetch('/models/mwj36.obj')
+    const text = await promise.text()
+    const { ptr, length } = writeStringToMemory(data)
+    exports.setModel(ptr)
+}
 
 
 
@@ -174,6 +179,7 @@ wasmMemory3.set(jsArray);
     //console.log(exports);
 
     //ASWebGLReady(obj, importObject);
+    loadEngine()
     requestAnimationFrame(renderFrame);
   })();
 
