@@ -17,6 +17,9 @@ export function initGL(importObject) {
     const program = []
     importObject.GL.program = program
 
+    const texture = []
+    importObject.GL.texture = texture
+
     importObject.GL.memory = importObject.env.memory;
 
     importObject.GL.getString = (string_index) => {
@@ -92,6 +95,14 @@ export function initGL(importObject) {
 
     importObject.GL.compileShader = (gl_id, shaderID) => {
         context[gl_id].compileShader(shader[shaderID])
+
+        const success = context[gl_id].getShaderParameter(shader[shaderID], context[gl_id].COMPILE_STATUS);
+        if(!success){
+            const errorLog = context[gl_id].getShaderInfoLog(shader[shaderID]);
+            console.error("Shader compilation failed:", errorLog);
+            context[gl_id].deleteShader(shader[shaderID]);
+            return null;
+        }
     }
 
     importObject.GL.createProgram = (gl_id) => {
@@ -144,6 +155,59 @@ export function initGL(importObject) {
 
     importObject.GL.drawElements = (gl_id, kind, length, size, offset) => {
         context[gl_id].drawElements( kind, length, size, offset )
+    }
+
+    importObject.GL.loadTexture = (gl_id, url)=>{
+        url = GL.getString(url)
+        const gl = context[gl_id]
+        const texPtr = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texPtr);
+        // Placeholder pixel while the image loads
+        const level = 0;
+        const internalFormat = gl.RGBA;
+        const width = 1;
+        const height = 1;
+        const border = 0;
+        const srcFormat = gl.RGBA;
+        const srcType = gl.UNSIGNED_BYTE;
+        const pixel = new Uint8Array([0, 0, 255, 255]); // Opaque blue
+        gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border, srcFormat, srcType, pixel);
+        const image = new Image();
+        image.onload = () => {
+            gl.bindTexture(gl.TEXTURE_2D, texPtr);
+            gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, srcFormat, srcType, image);
+            if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+                gl.generateMipmap(gl.TEXTURE_2D);
+            } else {
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            }
+        };
+        image.src = url;
+        GL.texture.push(texPtr)
+        return GL.texture.length-1
+    }
+    function isPowerOf2(value) {
+        return (value & (value - 1)) === 0;
+    }
+
+    importObject.GL.getUniformLocation = (gl_id,programID, name) => {
+        name = GL.getString(name)
+        const attrLoc = context[gl_id].getUniformLocation(program[programID], name)
+        return attrLoc
+    }
+
+    importObject.GL.activeTexture = (gl_id, index) => {
+        context[gl_id].activeTexture( index )
+    }
+
+    importObject.GL.bindTexture = (gl_id, kind, id) => {
+        context[gl_id].bindTexture( kind, texture[id] )
+    }
+
+    importObject.GL.uniform1i = (gl_id, uniLoc, index) => {
+        context[gl_id].uniform1i( uniLoc, index )
     }
 
 }

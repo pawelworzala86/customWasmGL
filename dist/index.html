@@ -7,7 +7,7 @@
   <title>Textured Quad Example</title>
 </head>
 
-<body style="background-color: black">
+<body>
   <div style="text-align: center">
     <canvas id="cnvs" width="512" height="512"></canvas>
   </div>
@@ -152,7 +152,7 @@ wasmMemory3.set(jsArray);
     last_time = new Date().getTime();
 
     // call the displayLoop function in the WASM module
-    //exports.displayLoop(delta);
+    exports.displayLoop(delta);
 
     // requestAnimationFrame calls renderFrame the next time a frame is rendered
     requestAnimationFrame(renderFrame);
@@ -199,7 +199,7 @@ wasmMemory3.set(jsArray);
 
 
     //ASWebGLReady(obj, importObject);
-    //requestAnimationFrame(renderFrame);
+    requestAnimationFrame(renderFrame);
   })();
 
 </script>

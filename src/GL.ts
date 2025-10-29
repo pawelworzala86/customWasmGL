@@ -44,6 +44,12 @@ export declare function clear(gl_id: WebGLRenderingContextId,kind:i32):void
 export declare function viewport(gl_id: WebGLRenderingContextId,l1:i32,l2:i32,w:i32,h:i32):void
 export declare function drawElements(gl_id: WebGLRenderingContextId, kind:GLenum, length: i32, size:GLenum, offset:i32):void
 
+export declare function loadTexture(gl_id: WebGLRenderingContextId, url:string):i32
+export declare function getUniformLocation(gl_id: WebGLRenderingContextId, programID:i32, name:string):i32
+export declare function activeTexture(gl_id: WebGLRenderingContextId, index:GLenum):void
+export declare function bindTexture(gl_id: WebGLRenderingContextId, kind:GLenum, id:i32):void
+
+export declare function uniform1i(gl_id: WebGLRenderingContextId, uniLoc:i32, index:i32):void
 
 export class WebGLRenderingContext{
 
@@ -131,7 +137,25 @@ export class WebGLRenderingContext{
         drawElements(this.gl_id, kind, length, size, offset)
     }
 
+    loadTexture(url:string):i32{
+        return loadTexture(this.gl_id, url)
+    }
 
+    getUniformLocation(programID:i32, name:string):i32{
+        return getUniformLocation(this.gl_id, programID, name)
+    }
+
+    activeTexture(index:GLenum):void{
+        activeTexture(this.gl_id, index)
+    }
+
+    bindTexture(kind:GLenum, id:i32):void{
+        bindTexture(this.gl_id, kind, id)
+    }
+
+    uniform1i(uniLoc:i32, index:i32):void{
+        uniform1i(this.gl_id, uniLoc, index)
+    }
 
 
 
