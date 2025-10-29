@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Textured Quad Example</title>
+</head>
+
+<body style="background-color: black">
+  <div style="text-align: center">
+    <canvas id="cnvs" width="512" height="512"></canvas>
+  </div>
+</body>
+<script type="module">
+  //import { initASWebGLue, ASWebGLReady } from '/ASWebGLue2.js';
+  import {initEngine} from '/Engine.js'
+  import {initGL} from '/GL.js'
+
+  const wasm_file = 'madengine.wasm';
+
+  var exports;
+  var last_time = 0;
+  var w = window.innerWidth * 0.99;
+  var h = window.innerHeight * 0.99;
+  var cnvs = document.getElementById("cnvs");
+  if (w > h) {
+    cnvs.width = h;
+    cnvs.height = h;
+  }
+  else {
+    cnvs.width = w;
+    cnvs.height = w;
+  }
+
+
+
+
+ function getStr(ptr,len){
+        // Odczytaj pamięć WASM
+        const memory = new Uint8Array(importObject.env.memory.buffer, ptr, len);
+
+        // Dekoduj string UTF-8
+        const decoder = new TextDecoder("utf-8");
+        const str = decoder.decode(memory);
+
+        // Wyświetl odczytany string
+        console.log("String from WASM:", str);
+        return str
+    }
+
+  // Funkcja do zapisywania stringa w pamięci WASM
+  function writeStringToMemory(str) {
+    const encoder = new TextEncoder();
+    const encodedString = encoder.encode(str);
+    const buffer = new Uint8Array(memory.buffer);
+
+    // Zwiększ pamięć, jeśli jest za mała
+    const requiredMemory = encodedString.length;
+    if (buffer.byteLength < requiredMemory) {
+      wasmModule.instance.exports.memory.grow(Math.ceil(requiredMemory / 65536));
+    }
+
+    // Wskaźnik początkowy do pamięci WASM
+    const ptr = 0; // Stały wskaźnik do początku pamięci (bez dynamicznej alokacji)
+
+    // Kopiuj string do pamięci WASM
+    buffer.set(encodedString, ptr);
+    return { ptr, length: encodedString.length };
+  }
+
+  
+
+  async function loadModel(modelID,strPtr,strLen){
+    const name = getStr(strPtr,strLen)
+
+    console.log('model name: ', name)
+
+    const response = await fetch('/models/mwj36/mwj36.bin');
+    const jsArray = new Uint8Array(await response.arrayBuffer());
+
+    // Alokujemy miejsce w pamięci WASM
+    const byteLength = jsArray.length;
+    const ptr = exports.__new(byteLength, 0); // zakładamy, że masz funkcję malloc w WASM
+
+    // Skopiuj dane do WASM pamięci
+    const wasmMemory = new Uint8Array(exports.memory.buffer, ptr, byteLength);
+    wasmMemory.set(jsArray);
+
+    // Przekaż wskaźnik i długość do WASM
+    const meshDataID = exports.setModelData(ptr, byteLength);
+
+
+
+    const buffer = jsArray
+
+    let offset = 0
+    function getUint32(){
+      const i8 = buffer.slice(offset,offset+4)
+      offset+=4
+      return (new Uint32Array(i8.buffer))[0]
+    }
+    function getDataF32(length){
+      const i8 = buffer.slice(offset,offset+length)
+      offset+=length
+      return (new Float32Array(i8.buffer))
+    }
+    function getString(length) {
+      const i8 = buffer.slice(offset, offset + length);
+      offset += length;
+      return new TextDecoder("utf-8").decode(i8);
+    }
+    //console.log(buffer)
+    const dataLen = getUint32()
+    console.log('dataLen',dataLen)
+    const dataSet = getDataF32(dataLen)
+    console.log('dataSet',dataSet)
+    const texLen = getUint32()
+    console.log('texLen',texLen)
+    const texureName = getString(texLen)
+    console.log('texureName',texureName)
+
+// Przykładowa tablica Float32Array (JavaScript)
+//const jsArray = dataSet
+/*
+// Ręczna alokacja pamięci w WASM
+const arrayPointer = exports.memory.grow(jsArray.length * jsArray.BYTES_PER_ELEMENT / 65536); // Alokacja nowych stron pamięci (każda strona ma 64 KB)
+const wasmMemory3 = new Float32Array(exports.memory.buffer, arrayPointer, jsArray.length);
+
+// Skopiowanie danych z Float32Array do pamięci WASM
+wasmMemory3.set(jsArray);
+
+  const meshDataID = exports.setMeshData(arrayPointer, jsArray.length);
+
+  const { ptr, length } = writeStringToMemory(texureName);
+  const textureID = exports.setTexture(ptr, length); // Wywołaj funkcję WASM
+
+  exports.addMesh(modelID, meshDataID, textureID)
+*/
+  //console.log(arrayNum)
+}
+
+
+
+
+
+
+
+  function renderFrame() {
+    let delta = 0;
+    if (last_time !== 0) {
+      delta = (new Date().getTime() - last_time);
+    }
+    last_time = new Date().getTime();
+
+    // call the displayLoop function in the WASM module
+    //exports.displayLoop(delta);
+
+    // requestAnimationFrame calls renderFrame the next time a frame is rendered
+    requestAnimationFrame(renderFrame);
+
+  }
+
+
+
+
+
+
+  const memory = new WebAssembly.Memory({ initial: 100 }); // linear memory
+
+  var importObject = {
+    env: {
+      memory: memory,
+      seed: Date.now,
+      abort(msgPtr, filePtr, line, column) {
+        const msg = getString(msgPtr);
+        const file = getString(filePtr);
+        console.error(`abort: ${msg} at ${file}:${line}:${column}`);
+      }
+    }
+  };
+
+  //initMyFuncs(importObject)
+  initEngine(importObject);
+  initGL(importObject);
+
+  (async () => {
+    // use WebAssembly.instantiateStreaming in combination with
+    // fetch instead of WebAssembly.instantiate and fs.readFileSync
+    let obj = await WebAssembly.instantiateStreaming(fetch(wasm_file), importObject);
+    console.log(obj);
+    exports = obj.instance.exports;
+    console.log(exports);
+
+
+
+    //exports.setLog('hello world!!!')
+
+
+
+
+
+    //ASWebGLReady(obj, importObject);
+    requestAnimationFrame(renderFrame);
+  })();
+
+</script>
+
+</html>

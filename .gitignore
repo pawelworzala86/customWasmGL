@@ -1,0 +1,10 @@
+node_modules
+build
+package-lock.json
+*.wasm
+*.wat
+images
+src/extended
+src/old
+hidden
+*.sh
