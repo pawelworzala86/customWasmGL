@@ -17,7 +17,11 @@ export type GLclampf = f32;
 export type GLuint64 = u32; //u64;
 export type GLint64 = i32; //i64;
 
+
+
+
 export declare function log(text: string):void;
+
 
 export declare function createContextFromCanvas(canvas_id: string): WebGLRenderingContextId;
 export declare function createBuffer(gl_id: WebGLRenderingContextId): i32;
@@ -30,6 +34,12 @@ export declare function createProgram(gl_id: WebGLRenderingContextId): i32;
 export declare function attachShader(gl_id: WebGLRenderingContextId, programID:i32,shaderID:i32): void;
 export declare function linkProgram(gl_id: WebGLRenderingContextId, programID:i32): void;
 export declare function useProgram(gl_id: WebGLRenderingContextId, programID:i32): void;
+export declare function getAttribLocation(gl_id: WebGLRenderingContextId, programID:i32, name:string):i32
+export declare function vertexAttribPointer(gl_id: WebGLRenderingContextId, attrLoc:i32, size:i32, type:GLenum, p1:GLboolean, p2:GLenum, p3:GLenum):void
+export declare function enableVertexAttribArray(gl_id: WebGLRenderingContextId, attrLoc:i32):void
+
+export declare function clearColor(gl_id: WebGLRenderingContextId,c1:f32,c2:f32,c3:f32,a:f32):void
+
 
 export class WebGLRenderingContext{
 
@@ -84,6 +94,30 @@ export class WebGLRenderingContext{
     useProgram(programID:i32):void{
         useProgram(this.gl_id, programID)
     }
+
+    getAttribLocation(programID:i32, name:string):i32{
+        return getAttribLocation(this.gl_id, programID, name)
+    }
+
+    vertexAttribPointer(attrLoc:i32, size:i32, type:GLenum, p1:GLboolean, p2:GLenum, p3:GLenum):void{
+        vertexAttribPointer(this.gl_id, attrLoc, size, type, p1, p2, p3)
+    }
+
+    enableVertexAttribArray(attrLoc:i32):void{
+        enableVertexAttribArray(this.gl_id, attrLoc)
+    }
+
+    clearColor(c1:f32,c2:f32,c3:f32,a:f32):void{
+        clearColor(this.gl_id, c1,c2,c3,a)
+    }
+
+
+
+
+
+
+
+
 
 
 

@@ -86,6 +86,7 @@ export function initGL(importObject) {
     }
 
     importObject.GL.shaderSource = (gl_id, shaderID, code) => {
+        code = GL.getString(code)
         context[gl_id].shaderSource(shader[shaderID],code)
     }
 
@@ -109,6 +110,24 @@ export function initGL(importObject) {
 
     importObject.GL.useProgram = (gl_id,programID) => {
         context[gl_id].useProgram(program[programID])
+    }
+
+    importObject.GL.getAttribLocation = (gl_id,programID, name) => {
+        name = GL.getString(name)
+        const attrLoc = context[gl_id].getAttribLocation(program[programID], name)
+        return attrLoc
+    }
+
+    importObject.GL.vertexAttribPointer = (gl_id, attrLoc, size, type, p1, p2, p3) => {
+        context[gl_id].vertexAttribPointer(attrLoc, size, type, p1, p2, p3)
+    }
+
+    importObject.GL.enableVertexAttribArray = (gl_id, attrLoc) => {
+        context[gl_id].enableVertexAttribArray( attrLoc)
+    }
+
+    importObject.GL.clearColor = (gl_id, c1,c2,c3,a) => {
+        context[gl_id].clearColor( c1,c2,c3,a )
     }
 
 }

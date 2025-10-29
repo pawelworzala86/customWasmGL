@@ -95,7 +95,7 @@ const gl = new WebGLRenderingContext('cnvs')
 
          // Use the combined shader program object
          gl.useProgram(shaderProgram);
-/*
+
         
 
          // Bind vertex buffer object
@@ -117,7 +117,7 @@ const gl = new WebGLRenderingContext('cnvs')
 
          // Clear the canvas
          gl.clearColor(0.5, 0.5, 0.5, 0.9);
-
+/*
          // Enable the depth test
          gl.enable(gl.DEPTH_TEST);
 
