@@ -20,8 +20,6 @@
 
 
 
-  
-
 
  function getStr(ptr,len){
         // Odczytaj pamięć WASM
@@ -57,7 +55,7 @@
   }
 
   
-
+/*
   async function loadModel(modelID,strPtr,strLen){
     const name = getStr(strPtr,strLen)
 
@@ -109,7 +107,7 @@
 
 // Przykładowa tablica Float32Array (JavaScript)
 //const jsArray = dataSet
-/*
+
 // Ręczna alokacja pamięci w WASM
 const arrayPointer = exports.memory.grow(jsArray.length * jsArray.BYTES_PER_ELEMENT / 65536); // Alokacja nowych stron pamięci (każda strona ma 64 KB)
 const wasmMemory3 = new Float32Array(exports.memory.buffer, arrayPointer, jsArray.length);
@@ -123,10 +121,10 @@ wasmMemory3.set(jsArray);
   const textureID = exports.setTexture(ptr, length); // Wywołaj funkcję WASM
 
   exports.addMesh(modelID, meshDataID, textureID)
-*/
+
   //console.log(arrayNum)
 }
-
+*/
 
 
 
