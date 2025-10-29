@@ -130,4 +130,20 @@ export function initGL(importObject) {
         context[gl_id].clearColor( c1,c2,c3,a )
     }
 
+    importObject.GL.enable = (gl_id, kind) => {
+        context[gl_id].enable( kind )
+    }
+
+    importObject.GL.clear = (gl_id, kind) => {
+        context[gl_id].clear( kind )
+    }
+
+    importObject.GL.viewport = (gl_id, l1,l2,w,h) => {
+        context[gl_id].viewport( l1,l2,w,h )
+    }
+
+    importObject.GL.drawElements = (gl_id, kind, length, size, offset) => {
+        context[gl_id].drawElements( kind, length, size, offset )
+    }
+
 }

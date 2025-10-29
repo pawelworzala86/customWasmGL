@@ -68,7 +68,7 @@ const gl = new WebGLRenderingContext('cnvs')
          // Fragment shader source code
          var fragCode =
             'void main(void) {' +
-               ' gl_FragColor = vec4(0.0, 0.0, 0.0, 0.1);' +
+               ' gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);' +
             '}';
 
          // Create fragment shader object 
@@ -117,7 +117,7 @@ const gl = new WebGLRenderingContext('cnvs')
 
          // Clear the canvas
          gl.clearColor(0.5, 0.5, 0.5, 0.9);
-/*
+
          // Enable the depth test
          gl.enable(gl.DEPTH_TEST);
 
@@ -125,14 +125,15 @@ const gl = new WebGLRenderingContext('cnvs')
          gl.clear(gl.COLOR_BUFFER_BIT);
 
          // Set the view port
-         gl.viewport(0,0,canvas.width,canvas.height);
+         //gl.viewport(0,0,canvas.width,canvas.height);
+         gl.viewport(0,0,512,512);
 
          // Draw the triangle
          gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT,0);
 
 
 
-*/
+
 
 
 

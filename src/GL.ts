@@ -39,6 +39,10 @@ export declare function vertexAttribPointer(gl_id: WebGLRenderingContextId, attr
 export declare function enableVertexAttribArray(gl_id: WebGLRenderingContextId, attrLoc:i32):void
 
 export declare function clearColor(gl_id: WebGLRenderingContextId,c1:f32,c2:f32,c3:f32,a:f32):void
+export declare function enable(gl_id: WebGLRenderingContextId,kind:i32):void
+export declare function clear(gl_id: WebGLRenderingContextId,kind:i32):void
+export declare function viewport(gl_id: WebGLRenderingContextId,l1:i32,l2:i32,w:i32,h:i32):void
+export declare function drawElements(gl_id: WebGLRenderingContextId, kind:GLenum, length: i32, size:GLenum, offset:i32):void
 
 
 export class WebGLRenderingContext{
@@ -111,10 +115,21 @@ export class WebGLRenderingContext{
         clearColor(this.gl_id, c1,c2,c3,a)
     }
 
+    enable(kind:i32):void{
+        enable(this.gl_id, kind)
+    }
 
+    clear(kind:i32):void{
+        clear(this.gl_id, kind)
+    }
 
+    viewport(l1:i32,l2:i32,w:i32,h:i32):void{
+        viewport(this.gl_id, l1,l2,w,h)
+    }
 
-
+    drawElements(kind:GLenum, length: i32, size:GLenum, offset:i32):void{
+        drawElements(this.gl_id, kind, length, size, offset)
+    }
 
 
 
