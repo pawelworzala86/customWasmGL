@@ -5,6 +5,18 @@ export function initGL(importObject) {
 
     const GL = importObject.GL
 
+    const context = []
+    importObject.GL.context = context
+
+    const buffer = []
+    importObject.GL.buffer = buffer
+
+    const shader = []
+    importObject.GL.shader = shader
+
+    const program = []
+    importObject.GL.program = program
+
     importObject.GL.memory = importObject.env.memory;
 
     importObject.GL.getString = (string_index) => {
@@ -19,7 +31,7 @@ export function initGL(importObject) {
     }
 
     importObject.GL.getArray = (ptr, length, type = 'i32') => {
-        const buffer = WebGL.memory.buffer;
+        const buffer = GL.memory.buffer;
 
         switch (type) {
             case 'i8':  return new Int8Array(buffer, ptr, length);
@@ -44,6 +56,59 @@ export function initGL(importObject) {
     importObject.GL.createContextFromCanvas = (canvas_id) => {
         const canvasId = GL.getString(canvas_id)
         console.log('TEST ID = ',canvasId)
-        return 0
+        const canvas = document.getElementById(canvasId)
+        const gl = canvas.getContext('webgl2')
+        context.push(gl)
+        return context.length-1
     }
+
+    importObject.GL.createBuffer = (gl_id) => {
+        const buffer = context[gl_id].createBuffer()
+        GL.buffer.push(buffer)
+        return GL.buffer.length-1
+    }
+
+    importObject.GL.bindBuffer = (gl_id, type, buffer) => {
+        context[gl_id].bindBuffer(type, GL.buffer[buffer])
+    }
+
+    importObject.GL.bufferData = (gl_id, type, array, arrayLen, kind) => {
+        //return context[gl_id].bindBuffer(type, buffer)
+        const data = GL.getArray(array, arrayLen, 'i8')
+        //console.log('data F32',data)
+        context[gl_id].bufferData(type, data, kind);
+    }
+
+    importObject.GL.createShader = (gl_id, type) => {
+        const shader = context[gl_id].createShader(type)
+        GL.shader.push(shader)
+        return GL.shader.length-1
+    }
+
+    importObject.GL.shaderSource = (gl_id, shaderID, code) => {
+        context[gl_id].shaderSource(shader[shaderID],code)
+    }
+
+    importObject.GL.compileShader = (gl_id, shaderID) => {
+        context[gl_id].compileShader(shader[shaderID])
+    }
+
+    importObject.GL.createProgram = (gl_id) => {
+        const program = context[gl_id].createProgram()
+        GL.program.push(program)
+        return GL.program.length-1
+    }
+
+    importObject.GL.attachShader = (gl_id,programID,shaderID) => {
+        context[gl_id].attachShader(program[programID],shader[shaderID])
+    }
+
+    importObject.GL.linkProgram = (gl_id,programID) => {
+        context[gl_id].linkProgram(program[programID])
+    }
+
+    importObject.GL.useProgram = (gl_id,programID) => {
+        context[gl_id].useProgram(program[programID])
+    }
+
 }
