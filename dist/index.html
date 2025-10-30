@@ -126,13 +126,23 @@ wasmMemory3.set(jsArray);
 }
 */
 
+/*
 async function loadEngine(){
     const promise = await fetch('/models/mwj36.obj')
-    const text = await promise.text()
-    const { ptr, length } = writeStringToMemory(data)
-    exports.setModel(ptr)
-}
+    //const text = await promise.text()
+    //const { ptr, length } = writeStringToMemory(text)
+    const jsArray = new Uint8Array(await promise.arrayBuffer());
 
+    // Alokujemy miejsce w pamięci WASM
+    const byteLength = jsArray.length;
+    const ptr = exports.__new(byteLength, 0); // zakładamy, że masz funkcję malloc w WASM
+
+    // Skopiuj dane do WASM pamięci
+    const wasmMemory = new Uint8Array(exports.memory.buffer, ptr, byteLength);
+    wasmMemory.set(jsArray);
+    exports.setModel(ptr,byteLength)
+}
+*/
 
 
 
@@ -179,7 +189,7 @@ async function loadEngine(){
     //console.log(exports);
 
     //ASWebGLReady(obj, importObject);
-    loadEngine()
+    //loadEngine()
     requestAnimationFrame(renderFrame);
   })();
 

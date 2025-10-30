@@ -174,9 +174,9 @@ void main(void) {
 
 
 
-
-
-
+export function setModel(ptr:i32,length:i32):void{
+   log('model set...')
+}
 
 
 
