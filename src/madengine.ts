@@ -3,7 +3,7 @@ import {
   log,
 } from './GL';
 
-
+import { Shader } from './shader';
 
 
 log('started...')
@@ -67,68 +67,7 @@ const gl = new WebGLRenderingContext('cnvs')
 
          
 
-         // Vertex shader source code
-         var vertCode = `#version 300 es
-
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec2 texCoord;
-
-out vec2 v_coord;
-
-void main(void) {
-   gl_Position = vec4(position, 1.0);
-
-   v_coord = texCoord;
-}`
-
-         // Create a vertex shader object
-         var vertShader = gl.createShader(gl.VERTEX_SHADER);
-
-         // Attach vertex shader source code
-         gl.shaderSource(vertShader, vertCode);
-
-         // Compile the vertex shader
-         gl.compileShader(vertShader);
-
-         // Fragment shader source code
-         var fragCode = `#version 300 es
-precision mediump float;
-
-in vec2 v_coord;
-
-uniform sampler2D diffuseTex;
-
-layout(location = 0) out vec4 color;
-
-void main(void) {
-   color = texture(diffuseTex, v_coord);
-   //vec4(v_coord.x, v_coord.y, 1.0, 1.0);
-}`
-
-         // Create fragment shader object 
-         var fragShader = gl.createShader(gl.FRAGMENT_SHADER);
-
-         // Attach fragment shader source code
-         gl.shaderSource(fragShader, fragCode);
-
-         // Compile the fragmentt shader
-         gl.compileShader(fragShader);
-
-         // Create a shader program object to
-         // store the combined shader program
-         var shaderProgram = gl.createProgram();
-
-         // Attach a vertex shader
-         gl.attachShader(shaderProgram, vertShader);
-
-         // Attach a fragment shader
-         gl.attachShader(shaderProgram, fragShader);
-
-         // Link both the programs
-         gl.linkProgram(shaderProgram);
-
-         // Use the combined shader program object
-         gl.useProgram(shaderProgram);
+         const shader = new Shader(gl)
 
         
 
@@ -139,13 +78,13 @@ void main(void) {
          // Get the attribute location
          // Bind vertex buffer object
          gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
-         var positionLoc = gl.getAttribLocation(shaderProgram, "position");
+         var positionLoc = gl.getAttribLocation(shader.program, "position");
          gl.vertexAttribPointer(positionLoc, 3, gl.FLOAT, false, 0, 0);
          gl.enableVertexAttribArray(positionLoc);
 
          // Bind vertex buffer object
          gl.bindBuffer(gl.ARRAY_BUFFER, coords_buffer);
-         var coordLoc = gl.getAttribLocation(shaderProgram, "texCoord");
+         var coordLoc = gl.getAttribLocation(shader.program, "texCoord");
          gl.vertexAttribPointer(coordLoc, 2, gl.FLOAT, false, 0, 0);
          gl.enableVertexAttribArray(coordLoc);
 
@@ -163,7 +102,7 @@ void main(void) {
 
       const textureID = gl.loadTexture('texture.jpg')
 
-      const textureLocation = gl.getUniformLocation(shaderProgram, "diffuseTex")
+      const textureLocation = gl.getUniformLocation(shader.program, "diffuseTex")
       if(textureLocation){
          gl.activeTexture(gl.TEXTURE0)
          gl.bindTexture(gl.TEXTURE_2D, textureID)
@@ -174,8 +113,26 @@ void main(void) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export function setModel(ptr:i32,length:i32):void{
-   log('model set...')
+   let text = String.UTF8.decodeUnsafe(ptr, length, true);
+
+   log('model set...: ')
 }
 
 

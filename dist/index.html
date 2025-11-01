@@ -126,7 +126,7 @@ wasmMemory3.set(jsArray);
 }
 */
 
-/*
+
 async function loadEngine(){
     const promise = await fetch('/models/mwj36.obj')
     //const text = await promise.text()
@@ -142,7 +142,7 @@ async function loadEngine(){
     wasmMemory.set(jsArray);
     exports.setModel(ptr,byteLength)
 }
-*/
+
 
 
 
@@ -189,7 +189,7 @@ async function loadEngine(){
     //console.log(exports);
 
     //ASWebGLReady(obj, importObject);
-    //loadEngine()
+    loadEngine()
     requestAnimationFrame(renderFrame);
   })();
 
