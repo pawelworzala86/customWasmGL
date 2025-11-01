@@ -159,8 +159,92 @@ const mesh:Mesh = new Mesh()
 
 
 
+class cMesh {
+  position: Array<f32> = new Array<f32>();
+  normal: Array<f32>   = new Array<f32>();
+  coord: Array<f32>    = new Array<f32>();
+}
+
+let current: cMesh = new cMesh();
+let meshes = new Array<cMesh>();
+
+export function loadOBJ(obj: string): Array<cMesh> {
+
+  let modelPos = new Array<Array<f32>>();
+  let modelNorm = new Array<Array<f32>>();
+  let modelUV = new Array<Array<f32>>();
+
+  const newMesh=(): void => {
+    current = new cMesh();
+    meshes.push(current);
+  }
+
+  const lines = obj.split("\n");
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i].trim();
+    if (line.length == 0 || line.startsWith("#")) continue;
+
+    let parts = line.split(" ");
+    let key = parts[0];
+    let params = parts.slice(1);
+
+    if (key == "o") {
+      newMesh();
+    } else if (key == "v") {
+      modelPos.push(params.map<f32>(p => <f32>parseFloat(p)));
+    } else if (key == "vn") {
+      modelNorm.push(params.map<f32>(p => <f32>parseFloat(p)));
+    } else if (key == "vt") {
+      modelUV.push(params.map<f32>(p => <f32>parseFloat(p)));
+    } else if (key == "f" && current) {
+      for (let j = 0; j < 3; j++) {
+        let idx = params[j].split("/").map<i32>(a => I32.parseInt(a));
+        let v = modelPos[idx[0] - 1];
+        current.position.push(v[0]); current.position.push(v[1]); current.position.push(v[2]);
+
+        let t = modelUV[idx[1] - 1];
+        current.coord.push(t[0]); current.coord.push(t[1]);
+
+        let n = modelNorm[idx[2] - 1];
+        current.normal.push(n[0]); current.normal.push(n[1]); current.normal.push(n[2]);
+      }
+    }
+  }
+
+  return meshes;
+}
+
+
+
+
+
+
+
+
+
+
 export function setModel(ptr:i32,length:i32):void{
    let text = String.UTF8.decodeUnsafe(ptr, length, true);
+
+
+
+
+   const elements:Array<cMesh> = loadOBJ(text)
+   const mesh:cMesh = elements[0]
+
+   log('mesh...: '+mesh.position.length.toString())
+
+
+
+
+
+
+
+
+
+
+
+
 
    log('model set...: ')
 }
