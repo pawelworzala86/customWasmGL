@@ -11,10 +11,34 @@ log('started...')
 const gl = new WebGLRenderingContext('cnvs')
 
 
-      
-      
 
-         const vertices:StaticArray<f32> = [
+
+
+class Mesh{
+   vertex_buffer: i32;
+   vertices:StaticArray<f32>;
+   constructor(){
+
+      this.vertices = [
+            0.5,0.5,0.0,
+            0.5,-0.5,0.0,
+            -0.5,-0.5,0.0,
+            0.5,0.5,0.0,
+            -0.5,-0.5,0.0,
+            -0.5,0.5,0.0,
+         ];
+
+         const coords:StaticArray<f32> = [
+            1.0,1.0,
+            1.0,0.0,
+            0.0,0.0,
+            1.0,1.0,
+            0.0,0.0,
+            0.0,1.0,
+         ];
+
+      
+         /*const vertices:StaticArray<f32> = [
             -0.5,0.5,0.0,
             -0.5,-0.5,0.0,
             0.5,-0.5,0.0,
@@ -28,7 +52,7 @@ const gl = new WebGLRenderingContext('cnvs')
             1.0,1.0,
          ];
 
-         const indices:StaticArray<i16> = [3,2,1,3,1,0];
+         const indices:StaticArray<i16> = [3,2,1,3,1,0];*/
 
 
 
@@ -39,7 +63,7 @@ const gl = new WebGLRenderingContext('cnvs')
          gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
 
          // Pass the vertex data to the buffer
-         gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+         gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.STATIC_DRAW);
 
          // Create an empty buffer object to store vertex buffer
          var coords_buffer = gl.createBuffer();
@@ -53,7 +77,7 @@ const gl = new WebGLRenderingContext('cnvs')
          // Unbind the buffer
          //gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
-         // Create an empty buffer object to store Index buffer
+         /*// Create an empty buffer object to store Index buffer
          var Index_Buffer = gl.createBuffer();
 
          // Bind appropriate array buffer to it
@@ -61,7 +85,7 @@ const gl = new WebGLRenderingContext('cnvs')
 
          // Pass the vertex data to the buffer
          gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
-
+*/
          // Unbind the buffer
          //gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
@@ -90,7 +114,7 @@ const gl = new WebGLRenderingContext('cnvs')
 
          
          // Bind index buffer object
-         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, Index_Buffer); 
+         //gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, Index_Buffer); 
 
 
 
@@ -110,6 +134,15 @@ const gl = new WebGLRenderingContext('cnvs')
       }
 
 
+      this.vertex_buffer = vertex_buffer
+   }
+   render():void{
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.vertex_buffer);
+      // Draw the triangle
+      //gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT,0);
+      gl.drawArrays(gl.TRIANGLES, 0, this.vertices.length/3);
+   }
+}
 
 
 
@@ -119,10 +152,7 @@ const gl = new WebGLRenderingContext('cnvs')
 
 
 
-
-
-
-
+const mesh:Mesh = new Mesh()
 
 
 
@@ -164,7 +194,7 @@ export function displayLoop(delta:f32):void{
          //gl.viewport(0,0,canvas.width,canvas.height);
          gl.viewport(0,0,512,512);
 
-         // Draw the triangle
-         gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT,0);
+
+         mesh.render()
 
 }

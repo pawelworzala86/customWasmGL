@@ -51,6 +51,13 @@ export declare function bindTexture(gl_id: WebGLRenderingContextId, kind:GLenum,
 
 export declare function uniform1i(gl_id: WebGLRenderingContextId, uniLoc:i32, index:i32):void
 
+export declare function drawArrays(gl_id: WebGLRenderingContextId, type:GLenum, offset:i32, lenght:i32):void
+
+
+
+
+
+
 export class WebGLRenderingContext{
 
     gl_id: WebGLRenderingContextId;
@@ -155,6 +162,10 @@ export class WebGLRenderingContext{
 
     uniform1i(uniLoc:i32, index:i32):void{
         uniform1i(this.gl_id, uniLoc, index)
+    }
+
+    drawArrays(type:GLenum, offset:i32, lenght:i32):void{
+        drawArrays(this.gl_id, type, offset, lenght)
     }
 
 

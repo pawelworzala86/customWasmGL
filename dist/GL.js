@@ -210,4 +210,8 @@ export function initGL(importObject) {
         context[gl_id].uniform1i( uniLoc, index )
     }
 
+    importObject.GL.drawArrays = (gl_id, type, offset, lenght) => {
+        context[gl_id].drawArrays( type, offset, lenght )
+    }
+
 }
